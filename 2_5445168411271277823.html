@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сессия 2.0</title>
+<style>
+:root{--bg:#f0f4fa;--grid:#d3deee;--ink:#161a2b;--sub:#4b5574;--blue:#1f3896;--card:#fff;--hl:#ffe45c;--red:#d92d3f;--green:#27a05c;--vio:#6a41a0;--hlink:#161a2b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10131f;--grid:#1b2136;--ink:#e8ebf7;--sub:#9aa5c7;--blue:#8fa6ff;--card:#181d30;--hl:#4a3f10;--red:#ff6577;--green:#4fd18b;--vio:#b58cf0}}
+:root[data-theme="dark"]{--bg:#10131f;--grid:#1b2136;--ink:#e8ebf7;--sub:#9aa5c7;--blue:#8fa6ff;--card:#181d30;--hl:#4a3f10;--red:#ff6577;--green:#4fd18b;--vio:#b58cf0}
+html,body{height:auto;margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+#app{max-width:520px;margin:0 auto;padding:16px 16px 40px}
+h1{font:700 40px Georgia,"Times New Roman",serif;color:var(--blue);margin:8px 0 12px}
+h2{font-size:22px;color:var(--blue);margin:0 0 12px}
+.row{display:flex;align-items:center;gap:10px;margin:6px 0}
+.row b{width:36px;text-align:right}.row span{width:76px}
+.bar{flex:1;height:14px;border:3px solid var(--blue);background:var(--card)}
+.bar i{display:block;height:100%;transition:width .4s}
+hr{border:0;border-top:3px solid var(--blue);margin:14px 0}
+.card{background:var(--card);border:3px solid var(--blue);box-shadow:6px 6px 0 var(--blue);padding:16px 16px 16px 28px;position:relative;margin-right:6px}
+.card:before{content:"";position:absolute;left:12px;top:0;bottom:0;border-left:2px solid var(--red)}
+.msg{background:var(--hl);padding:10px 12px;margin:0 0 12px}
+.vis{color:var(--red);font-style:italic}
+.whisper{color:var(--vio);font-style:italic;margin:8px 0}
+button{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:3px solid var(--blue);padding:12px;margin:10px 0;cursor:pointer}
+button small{display:block;color:var(--sub);margin-top:2px}
+button:active,button:hover{background:var(--hl)}
+button:disabled{opacity:.5;cursor:default}
+.ok{border-color:var(--green)}.bad{border-color:var(--red)}
+.ach{display:flex;gap:8px;padding:4px 0;color:var(--sub)}.ach.on{color:var(--ink);font-weight:600}
+.toast{background:var(--hl);border:2px dashed var(--blue);padding:6px 10px;margin:8px 0}
+body.dim:after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 120px 40px rgba(0,0,0,.65)}
+body.shake h1,body.shake h2{animation:sh .12s infinite}
+@keyframes sh{0%{transform:translate(1px,0)}50%{transform:translate(-2px,1px)}100%{transform:translate(1px,-1px)}}
+:root{--paper:#fffdf6}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#1a1f33}}
+:root[data-theme="dark"]{--paper:#1a1f33}
+body{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:17px;line-height:1.45}
+h1{display:inline-block;font-size:46px;letter-spacing:-.5px;margin:6px 0 12px;border-bottom:4px double var(--red);transition:text-shadow .6s}
+h2{font-size:24px}
+body.dim h1{text-shadow:3px 0 var(--red),-3px 0 var(--blue)}
+.row span{font-size:15px;width:78px}
+.bar{position:relative;height:16px;border-radius:2px}
+.bar:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 9px,var(--card) 9px 10px);opacity:.6}
+.bar.hot{animation:pulse .8s infinite alternate}
+.bar.low{border-style:dashed}
+@keyframes pulse{to{border-color:var(--red);box-shadow:0 0 8px var(--red)}}
+.card{background:var(--paper);border-radius:2px 16px 2px 2px;padding:20px 18px 20px 36px;box-shadow:7px 7px 0 var(--blue);transform:rotate(var(--tilt,0deg));transform-origin:50% 0;transition:transform .9s}
+.card:after{content:"";position:absolute;top:-12px;right:26px;width:72px;height:22px;background:var(--hl);opacity:.85;transform:rotate(4deg)}
+.msg{background:linear-gradient(100deg,transparent,var(--hl) 3%,var(--hl) 97%,transparent);border-radius:4px;padding:8px 14px}
+.vis{letter-spacing:.3px}
+.whisper{border-left:3px solid var(--vio);padding-left:10px;filter:blur(.4px)}
+button{font-size:17px;font-weight:600;border-width:2px 2px 4px;border-radius:3px;padding:12px 14px;transition:transform .08s,background .15s}
+button small{font-weight:400;font-size:14px;line-height:1.35}
+button:hover:not(:disabled){background:var(--hl);transform:translateX(3px)}
+button:active:not(:disabled){transform:translateY(2px);border-bottom-width:2px}
+button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+button.ok{background:color-mix(in srgb,var(--green) 20%,var(--card))}
+button.bad{background:color-mix(in srgb,var(--red) 20%,var(--card))}
+.toast{display:inline-block;background:none;border:3px double var(--red);color:var(--red);font-weight:700;padding:4px 12px;margin:6px 6px 6px 0;transform:rotate(-1.5deg)}
+.ach{padding:6px 0;border-bottom:1px dashed var(--grid)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.grade{display:inline-block;width:120px;height:120px;line-height:120px;text-align:center;font:700 84px Georgia,serif;color:var(--red);border:5px solid var(--red);border-radius:50%;transform:rotate(-8deg);margin:4px 0 12px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const AL={first:["Первый балл","Верно ответить на тест"],streak:["Серия","Три раза подряд — и бонус"],panic:["Паника","Пережить паническую атаку"],vision:["Я это видел","Увидеть жуткое видение"],whisper:["Голос за спиной","Услышать шёпот на экзамене"],clean:["Отличник","Сдать экзамен без ошибок"],zen:["Дзен","Дойти до экзамена с рассудком от 80"],dead:["???","Секретная награда"]};
+const SECRET=["Растворился в читальном зале","Секретная награда: потерять рассудок"];
+let A={};try{A=JSON.parse(localStorage.getItem("ses_ach")||"{}")}catch(e){}
+let toasts=[];
+function unlock(id){if(A[id])return;A[id]=1;try{localStorage.setItem("ses_ach",JSON.stringify(A))}catch(e){}toasts.push(id==="dead"?SECRET[1]:"Награда: «"+AL[id][0]+"»")}
+const Q=[["Сколько будет 12 × 12?",["124","144","148","132"],1],["Столица Австралии?",["Сидней","Мельбурн","Канберра","Перт"],2],["Кто написал «Войну и мир»?",["Достоевский","Толстой","Чехов","Гоголь"],1],["Формула воды?",["CO₂","H₂O","O₂","NaCl"],1],["В каком году началась Первая мировая война?","1905 1914 1917 1939".split(" "),1],["Производная от sin x?",["cos x","−cos x","−sin x","tan x"],0,1],["Самая большая планета Солнечной системы?",["Сатурн","Земля","Юпитер","Нептун"],2],["Скорость света примерно?",["300 000 км/с","30 000 км/с","3 000 км/с","1 000 000 км/с"],0],["Сколько хромосом у человека?",["23","44","46","48"],2,1],["Автор теории относительности?",["Ньютон","Эйнштейн","Бор","Тесла"],1],["Сколько континентов на Земле (по общепринятой модели)?",["5","6","7","8"],2],["Какой газ преобладает в атмосфере Земли?",["Кислород","Азот","Углекислый газ","Аргон"],1,1],["Кто написал «Евгения Онегина»?",["Лермонтов","Пушкин","Тютчев","Некрасов"],1],["Чему равно число π с точностью до сотых?",["3,12","3,14","3,41","3,16"],1],["Самое глубокое озеро мира?",["Ладожское","Байкал","Танганьика","Виктория"],1],["Чему равен корень из 169?",["12","13","14","15"],1,1],["В каком году человек впервые полетел в космос?",["1957","1961","1965","1969"],1],["Как называется образование органики растениями на свету?",["Дыхание","Фотосинтез","Брожение","Испарение"],1],["Какой элемент обозначается символом Fe?",["Фтор","Железо","Фосфор","Франций"],1,1],["Чему равна сумма углов треугольника?",["90°","180°","270°","360°"],1]];
+const V=["В конспекте слова ползут по странице.","Лампа в читальном зале моргает в такт твоему пульсу.","Из соседней парты на тебя смотрит кто-то без лица.","Все студенты одновременно перестали дышать.","Тень на стене не повторяет твоих движений.","В коридоре кто-то шепчет твоё имя."];
+const P=["утро","день","вечер"];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const sh=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const cl=v=>Math.max(0,Math.min(100,v));
+let S,app=document.getElementById("app");
+function init(){S={k:10,e:80,s:20,r:100,t:0,msg:"",last:"",n:0,tn:0,scr:"day",q:null,ex:[],i:0,sc:0,fb:"",bad:false};render()}
+function bars(){const b=(l,v,c)=>`<div class="row"><span>${l}</span><div class="bar ${c==="red"&&v>=70?"hot":""} ${c==="vio"&&v<50?"low":""}"><i style="width:${v}%;background:var(--${c})"></i></div><b>${v}</b></div>`;return b("Знания",S.k,"blue")+b("Энергия",S.e,"green")+b("Стресс",S.s,"red")+b("Рассудок",S.r,"vio")}
+function tst(){const h=toasts.map(t=>`<div class="toast">🏆 ${t}</div>`).join("");toasts=[];return h}
+function render(){
+ ["k","e","s","r"].forEach(x=>S[x]=cl(S[x]));
+ document.body.classList.toggle("dim",S.r<50);document.body.style.setProperty("--tilt",((100-S.r)/100*1.8).toFixed(2)+"deg");document.body.classList.toggle("shake",S.r<25&&S.r>0);
+ let h=`<h1>Сессия</h1>${bars()}<hr>`,c="";
+ if(S.scr==="day"){
+  const d=Math.floor(S.t/3)+1;
+  c=`<h2>День ${d} из 7, ${P[S.t%3]}</h2>${S.msg?`<div class="msg">${S.msg}</div>`:""}${tst()}
+  <button onclick="act('study')">Учить конспект<small>знания растут, уходят силы, стресс чуть выше</small></button>
+  <button onclick="act('test')">Решить тест<small>один вопрос: верный ответ даёт больше знаний</small></button>
+  <button onclick="act('walk')">Прогуляться<small>немного сил, меньше стресса</small></button>
+  <button onclick="act('friends')">Встретиться с друзьями<small>стресс уходит, но устаёшь</small></button>
+  <button onclick="act('sleep')">Поспать<small>силы возвращаются</small></button>`;
+ }else if(S.scr==="quiz"||S.scr==="exam"){
+  const ex=S.scr==="exam",q=S.q,n=ex?Math.min(S.k<25?0:S.k<55?1:2,q.h?1:2):0;
+  let rm=[];if(ex){const w=q.o.map((_,i)=>i).filter(i=>i!==q.a);rm=sh(w).slice(0,n);q.rm=q.rm||rm}
+  c=`<h2>${ex?`Экзамен: вопрос ${S.i+1} из 20`:"Тест"}</h2><p>${q.t}</p>${tst()}`;
+  if(ex&&S.r<40){if(!q.wh){const al=q.o.map((_,i)=>i).filter(i=>!q.rm.includes(i)),lie=al.filter(i=>i!==q.a),g=(Math.random()<.35||!lie.length)?q.a:rnd(lie);q.wh=q.o[g];unlock("whisper")}c+=`<div class="whisper">За спиной шепчет голос: «Ответ — ${q.wh}».</div>`+tst()}
+  if(S.fb){c+=`<div class="msg">${S.fb}</div><button onclick="${ex?"nextQ()":"back()"}">Дальше</button>`;
+   c=c.replace(/<h2>.*?<\/h2>/,m=>m)}
+  q.o.forEach((o,i)=>{if(ex&&q.rm.includes(i)&&!S.fb)return;const cls=S.fb?(i===q.a?"ok":(i===q.pick?"bad":"")):"";c+=`<button class="${cls}" ${S.fb||(ex&&q.rm.includes(i))?"disabled":""} onclick="pick(${i})">${o}</button>`});
+  if(S.fb){const b=c.match(/<div class="msg">.*?<\/button>/s)[0];c=c.replace(b,"")+b}
+ }else{
+  const sc=S.sc,g=sc>=18?5:sc>=14?4:sc>=10?3:2,t=S.bad?"Плохая концовка":"Оценка: "+g+" — "+["","","пересдача","удовлетворительно","хорошо","отлично"][g];
+  c=`<h2>${t}</h2>${S.bad?"":`<div class="grade">${g}</div>`}<p>${S.bad?"Рассудок упал до нуля. Читальный зал больше не отпустит тебя.":`Верных ответов на экзамене: ${sc} из 20.`}</p>${tst()}<hr><b>Награды</b>`+Object.keys(AL).map(k=>`<div class="ach ${A[k]?"on":""}"><span>${A[k]?"🏆":"🔒"}</span><span>${k==="dead"&&!A[k]?"???":AL[k][0]}${A[k]||k!=="dead"?" — "+(k==="dead"?SECRET[0]:AL[k][1]):""}</span></div>`).join("")+`<button onclick="init()" style="margin-top:16px">Играть снова</button>`;
+ }
+ app.innerHTML=h+`<div class="card">${c}</div>`;
+}
+function act(a){
+ const m=[];
+ if(a==="test"){const x=rnd(Q),o=sh(x[1].map((t,i)=>[t,i]));S.q={t:x[0],o:o.map(z=>z[0]),a:o.findIndex(z=>z[1]===x[2])};S.fb="";S.scr="quiz";S.n=0;return render()}
+ if(a==="study"){S.n=S.last==="study"?S.n+1:1;const g=S.e<15?5:10;S.k+=g;S.e-=15;S.s+=9;m.push(`Ты разобрал кусок темы: знания +${g}.`);if(S.n===3){S.k+=5;S.n=0;m.push("Три конспекта подряд — бонус: знания +5.");unlock("streak")}}
+ else{S.n=0;S.tn=0}
+ if(a==="walk"){S.e-=5;S.s-=10;S.r+=3;m.push("Свежий воздух: стресс −10, рассудок +3.")}
+ if(a==="friends"){S.s-=16;S.e-=10;S.r+=4;m.push("Посидели с друзьями: стресс −16, энергия −10, рассудок +4.")}
+ if(a==="sleep"){S.e+=25;S.s-=6;S.r+=6;m.push("Ты поспал: энергия +25, рассудок +6.")}
+ S.last=a;end(m)
+}
+function end(m){
+ const up=2+Math.floor(S.t/9);S.s+=up;m.push(`Дедлайн ближе: стресс +${up}.`);const d=S.s>=90?8:S.s>=70?5:0;if(d){S.r-=d;m.push("Стресс давит: рассудок −"+d+".")}if(S.s<40&&S.r<100){S.r+=2;m.push("Голова ясная: рассудок +2.")}
+ if(S.s>=90&&Math.random()<.6){S.k-=5;S.e-=10;m.push("Паническая атака! Знания −5, энергия −10.");unlock("panic")}
+ S.t++;
+ if(S.t%3===0&&S.s<50){S.r+=5;m.push("Спокойный день: рассудок +5.")}
+ if(S.r<60&&S.r>0&&Math.random()<.6){m.push(`<span class="vis">${rnd(V)}</span>`);unlock("vision")}
+ S.msg=m.join("<br>");
+ if(S.r<=0){S.r=0;S.bad=true;unlock("dead");S.scr="over";return render()}
+ if(S.t>=21){if(S.r>=80)unlock("zen");S.ex=sh(Q).slice(0,20);S.i=0;S.sc=0;S.scr="exam";setQ();return render()}
+ S.scr="day";render()
+}
+function setQ(){const x=S.ex[S.i],o=sh(x[1].map((t,i)=>[t,i]));S.q={t:x[0],o:o.map(z=>z[0]),a:o.findIndex(z=>z[1]===x[2]),h:x[3]};S.fb=""}
+function pick(i){
+ const q=S.q;q.pick=i;const ok=i===q.a;
+ if(S.scr==="quiz"){
+  if(ok){S.k+=14;S.e-=10;S.s+=6;S.tn=S.last==="test"?S.tn+1:1;S.fb="Верно! Знания +14.";unlock("first");if(S.tn===3){S.k+=5;S.tn=0;S.fb+=" Три верных подряд — бонус: знания +5.";unlock("streak")}}
+  else{S.k+=2;S.s+=12;S.tn=0;S.fb="Неверно. Знания +2, стресс +12."}
+  S.last="test";return render()}
+ if(ok)S.sc++;S.fb=ok?"Верно!":"Мимо. Правильный ответ подсвечен.";render()
+}
+function back(){const m=[S.fb];S.fb="";end(m)}
+function nextQ(){S.i++;if(S.i>=20){if(S.sc===20)unlock("clean");S.scr="over";S.msg="";return render()}setQ();render()}
+let C=null,M=null,dr=null,mute=false;
+try{mute=localStorage.getItem("ses_mute")==="1"}catch(e){}
+function ac(){if(!C){const X=window.AudioContext||window.webkitAudioContext;if(!X)return null;C=new X();M=C.createGain();M.gain.value=mute?0:.7;M.connect(C.destination);const o1=C.createOscillator(),o2=C.createOscillator(),g=C.createGain();o1.frequency.value=o2.frequency.value=55;g.gain.value=0;o1.connect(g);o2.connect(g);g.connect(M);o1.start();o2.start();dr={o2,g}}if(C.state==="suspended")C.resume();return C}
+function tone(f,d,ty,v,t0,f2){const c=ac();if(!c)return;const t=c.currentTime+(t0||0),o=c.createOscillator(),g=c.createGain();o.type=ty||"sine";o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(v||.15,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(M);o.start(t);o.stop(t+d+.02)}
+function noise(d,v,fq,t0,sw){const c=ac();if(!c)return;const t=c.currentTime+(t0||0),n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=Math.random()*2-1;const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type="bandpass";f.frequency.value=fq;f.Q.value=1.2;g.gain.setValueAtTime(sw?.001:v,t);if(sw)g.gain.linearRampToValueAtTime(v,t+d*.5);g.gain.linearRampToValueAtTime(.001,t+d);s.connect(f);f.connect(g);g.connect(M);s.start(t)}
+const SX={tick:()=>tone(520,.05,"square",.04),study:()=>{noise(.12,.25,3000);noise(.12,.25,3500,.15);noise(.12,.2,3200,.3)},walk:()=>{noise(.08,.4,300);noise(.08,.4,300,.3);noise(.08,.4,300,.6)},friends:()=>{tone(523,.15,"triangle",.15);tone(659,.15,"triangle",.15,.12);tone(784,.25,"triangle",.15,.24)},sleep:()=>tone(440,.9,"sine",.15,0,220),ok:()=>{tone(660,.12,"triangle",.18);tone(880,.2,"triangle",.18,.1)},no:()=>tone(220,.35,"sawtooth",.12,0,110),panic:()=>{tone(150,.8,"sawtooth",.1,.25);tone(158,.8,"sawtooth",.1,.25);noise(.5,.3,800,.25)},vision:()=>{tone(55,1.4,"sine",.3,.25);noise(1.2,.12,1800,.25,1)},whisper:()=>noise(1.1,.18,2500,0,1),stamp:()=>{tone(130,.18,"sine",.5,0,50);noise(.08,.3,1500)},bad:()=>{tone(220,1.8,"sawtooth",.18,.2,35);noise(1.6,.2,400,.2)},g5:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.35,"triangle",.18,i*.12)),g4:()=>[523,659,784].forEach((f,i)=>tone(f,.3,"triangle",.16,i*.14)),g3:()=>{tone(392,.3,"triangle",.15);tone(392,.3,"triangle",.15,.2)},g2:()=>{tone(311,.4,"sawtooth",.12);tone(233,.7,"sawtooth",.12,.35)}};
+function sfx(n){if(mute)return;try{SX[n]&&SX[n]()}catch(e){}}
+function drone(){if(!C||!dr)return;const lo=S.scr==="over"?0:Math.max(0,(60-S.r)/60);dr.g.gain.setTargetAtTime(lo*.08,C.currentTime,.5);dr.o2.frequency.setTargetAtTime(55*(1+(100-S.r)/100*.07),C.currentTime,.5)}
+const _act=act;act=function(a){sfx(a==="test"?"tick":a);_act(a)};
+const _end=end;end=function(m){_end(m);if(S.bad){sfx("bad");return}if(S.msg.includes("Паническая"))sfx("panic");if(S.msg.includes('class="vis"'))sfx("vision")};
+const _pick=pick;pick=function(i){const ok=i===S.q.a;_pick(i);sfx(ok?"ok":"no")};
+const _nq=nextQ;nextQ=function(){_nq();if(S.scr==="over"&&!S.bad)sfx("g"+(S.sc>=18?5:S.sc>=14?4:S.sc>=10?3:2))};
+const _u=unlock;unlock=function(id){const n=toasts.length;_u(id);if(toasts.length>n)setTimeout(()=>sfx("stamp"),450)};
+const _r=render;render=function(){_r();drone();if(S.scr==="exam"&&S.q&&S.q.wh&&!S.q.whp&&!S.fb){S.q.whp=1;sfx("whisper")}};
+document.addEventListener("pointerdown",e=>{ac();if(e.target.closest&&e.target.closest("button")&&e.target.id!=="mute")sfx("tick")});
+document.addEventListener("visibilitychange",()=>{if(C){document.hidden?C.suspend():C.resume()}});
+const mb=document.createElement("button");mb.id="mute";mb.setAttribute("aria-label","Звук");mb.style.cssText="position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;width:auto;margin:0;padding:6px 10px;z-index:20;display:block";
+const mu=()=>mb.textContent=mute?"🔇":"🔊";mu();
+mb.onclick=()=>{mute=!mute;try{localStorage.setItem("ses_mute",mute?"1":"0")}catch(e){}if(M)M.gain.value=mute?0:.7;mu();ac()};
+document.body.appendChild(mb);
+init();
+</script>
+</body>
+</html>
